@@ -1,0 +1,31 @@
+const int soilMoisturePin = A0;
+const int waterPumpPin = 3;
+const int pirMotionPin = 5;
+
+const int moistureThreshold = 500; // Adjust this value based on your soil and plant requirements
+
+void setup() {
+  pinMode(waterPumpPin, OUTPUT);
+  pinMode(pirMotionPin, INPUT);
+  digitalWrite(waterPumpPin, LOW); // Ensure the water pump is initially turned off
+  Serial.begin(9600);
+}
+
+void loop() {
+  int moistureLevel = analogRead(soilMoisturePin);
+  int motionDetected = digitalRead(pirMotionPin);
+
+  Serial.print("Moisture Level: ");
+  Serial.println(moistureLevel);
+  Serial.print("Motion Status: ");
+  Serial.println(motionDetected);
+
+  if (moistureLevel < moistureThreshold && !motionDetected) {
+    // Soil is dry and no motion detected, turn on the water pump
+    digitalWrite(waterPumpPin, HIGH);
+    delay(500);
+    digitalWrite(waterPumpPin, LOW); // Turn off the water pump after watering
+  }
+
+  delay(5000); // Delay for 5 seconds before checking soil moisture and motion again (adjust as needed)
+}
